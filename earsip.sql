@@ -1,167 +1,224 @@
--- phpMyAdmin SQL Dump
--- version 4.7.4
--- https://www.phpmyadmin.net/
+-- MySQL dump 10.16  Distrib 10.1.38-MariaDB, for Win64 (AMD64)
 --
--- Host: 127.0.0.1
--- Generation Time: Aug 12, 2018 at 04:27 PM
--- Server version: 10.1.28-MariaDB
--- PHP Version: 7.1.10
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
-SET time_zone = "+00:00";
-
+-- Host: localhost    Database: earsip
+-- ------------------------------------------------------
+-- Server version	10.1.38-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Database: `earsip`
+-- Table structure for table `arsip_dokumen`
 --
 
--- --------------------------------------------------------
+DROP TABLE IF EXISTS `arsip_dokumen`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `arsip_dokumen` (
+  `id_dokumen` int(11) NOT NULL AUTO_INCREMENT,
+  `nama_dokumen` varchar(255) DEFAULT NULL,
+  `file_path` varchar(255) DEFAULT NULL,
+  `tanggal_dokumen` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id_dokumen`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `arsip_formulir`
+--
+
+DROP TABLE IF EXISTS `arsip_formulir`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `arsip_formulir` (
+  `id_formulir` int(11) NOT NULL AUTO_INCREMENT,
+  `nama_formulir` varchar(255) DEFAULT NULL,
+  `file_path` varchar(255) DEFAULT NULL,
+  `tanggal_formulir` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id_formulir`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `disposisi_eksternal`
 --
 
+DROP TABLE IF EXISTS `disposisi_eksternal`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `disposisi_eksternal` (
-  `id_disposisi_eksternal` int(11) NOT NULL,
+  `id_disposisi_eksternal` int(11) NOT NULL AUTO_INCREMENT,
   `isi_disposisi` varchar(255) NOT NULL,
   `tanggal_disposisi` date NOT NULL,
   `tujuan_disposisi` int(11) DEFAULT NULL,
   `id_surat_eksternal` int(11) DEFAULT NULL,
-  `id_perintah` int(11) DEFAULT NULL
+  `id_perintah` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_disposisi_eksternal`),
+  KEY `fk_surat_eksternal` (`id_surat_eksternal`),
+  KEY `fk_user` (`tujuan_disposisi`),
+  KEY `fk_perintah_eksternal` (`id_perintah`),
+  CONSTRAINT `fk_perintah_eksternal` FOREIGN KEY (`id_perintah`) REFERENCES `perintah_disposisi` (`id_perintah`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `fk_surat_eksternal` FOREIGN KEY (`id_surat_eksternal`) REFERENCES `surat_eksternal` (`id_surat_eksternal`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `fk_user` FOREIGN KEY (`tujuan_disposisi`) REFERENCES `user` (`id_user`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `disposisi_internal`
 --
 
+DROP TABLE IF EXISTS `disposisi_internal`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `disposisi_internal` (
-  `id_disposisi_internal` int(11) NOT NULL,
+  `id_disposisi_internal` int(11) NOT NULL AUTO_INCREMENT,
   `isi_disposisi` text NOT NULL,
   `tanggal_disposisi` date NOT NULL,
   `id_surat_internal` int(11) DEFAULT NULL,
   `id_perintah` int(11) DEFAULT NULL,
-  `tujuan_disposisi` int(11) DEFAULT NULL
+  `tujuan_disposisi` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_disposisi_internal`),
+  KEY `fk_disposisi` (`id_surat_internal`),
+  KEY `fk_perintah` (`id_perintah`),
+  KEY `fk_tujuan` (`tujuan_disposisi`),
+  CONSTRAINT `fk_disposisi` FOREIGN KEY (`id_surat_internal`) REFERENCES `surat_internal` (`id_surat_internal`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `fk_perintah` FOREIGN KEY (`id_perintah`) REFERENCES `perintah_disposisi` (`id_perintah`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `fk_tujuan` FOREIGN KEY (`tujuan_disposisi`) REFERENCES `pegawai` (`id_pegawai`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `jabatan`
 --
 
+DROP TABLE IF EXISTS `jabatan`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `jabatan` (
-  `id_jabatan` int(11) NOT NULL,
+  `id_jabatan` int(11) NOT NULL AUTO_INCREMENT,
   `nama_jabatan` varchar(255) NOT NULL,
   `keterangan` text NOT NULL,
-  `id_unit` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `jabatan`
---
-
-INSERT INTO `jabatan` (`id_jabatan`, `nama_jabatan`, `keterangan`, `id_unit`) VALUES
-(1, 'administrator', 'admin sistem', 3);
-
--- --------------------------------------------------------
+  `id_unit` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_jabatan`),
+  KEY `fk_jabatan_unit` (`id_unit`),
+  CONSTRAINT `fk_jabatan_unit` FOREIGN KEY (`id_unit`) REFERENCES `unit_kerja` (`id_unit`) ON DELETE SET NULL ON UPDATE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `jenis_surat`
 --
 
+DROP TABLE IF EXISTS `jenis_surat`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `jenis_surat` (
-  `id_jenis` int(11) NOT NULL,
+  `id_jenis` int(11) NOT NULL AUTO_INCREMENT,
   `nama_jenis` varchar(255) NOT NULL,
-  `keterangan` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
+  `keterangan` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id_jenis`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `media_surat`
 --
 
+DROP TABLE IF EXISTS `media_surat`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `media_surat` (
-  `id_media` int(11) NOT NULL,
+  `id_media` int(11) NOT NULL AUTO_INCREMENT,
   `nama_media` varchar(255) NOT NULL,
-  `keterangan` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
+  `keterangan` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id_media`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `pegawai`
 --
 
+DROP TABLE IF EXISTS `pegawai`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `pegawai` (
-  `id_pegawai` int(11) NOT NULL,
+  `id_pegawai` int(11) NOT NULL AUTO_INCREMENT,
   `nama_pegawai` varchar(50) NOT NULL,
   `kontak_email` varchar(255) NOT NULL,
   `kontak_telepon` varchar(12) NOT NULL,
   `id_unit` int(11) DEFAULT NULL,
-  `id_jabatan` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `pegawai`
---
-
-INSERT INTO `pegawai` (`id_pegawai`, `nama_pegawai`, `kontak_email`, `kontak_telepon`, `id_unit`, `id_jabatan`) VALUES
-(1, 'Yusuf Eka Wicaksana', 'ekayusuf.wicaksana@gmail.com', '085212520595', 3, 1);
-
--- --------------------------------------------------------
+  `id_jabatan` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_pegawai`),
+  KEY `fk_pegawai_unit` (`id_unit`),
+  KEY `fk_pegawai_jabatan` (`id_jabatan`),
+  CONSTRAINT `fk_pegawai_jabatan` FOREIGN KEY (`id_jabatan`) REFERENCES `jabatan` (`id_jabatan`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `fk_pegawai_unit` FOREIGN KEY (`id_unit`) REFERENCES `unit_kerja` (`id_unit`) ON DELETE SET NULL ON UPDATE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `perintah_disposisi`
 --
 
+DROP TABLE IF EXISTS `perintah_disposisi`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `perintah_disposisi` (
-  `id_perintah` int(11) NOT NULL,
+  `id_perintah` int(11) NOT NULL AUTO_INCREMENT,
   `nama_perintah` varchar(255) NOT NULL,
-  `keterangan` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
+  `keterangan` varchar(255) NOT NULL,
+  PRIMARY KEY (`id_perintah`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `prioritas_surat`
 --
 
+DROP TABLE IF EXISTS `prioritas_surat`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `prioritas_surat` (
-  `id_prioritas` int(11) NOT NULL,
+  `id_prioritas` int(11) NOT NULL AUTO_INCREMENT,
   `nama_prioritas` varchar(255) NOT NULL,
-  `keterangan` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
+  `keterangan` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id_prioritas`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `sifat_surat`
 --
 
+DROP TABLE IF EXISTS `sifat_surat`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `sifat_surat` (
-  `id_sifat` int(11) NOT NULL,
+  `id_sifat` int(11) NOT NULL AUTO_INCREMENT,
   `nama_sifat` varchar(255) NOT NULL,
-  `keterangan` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
+  `keterangan` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id_sifat`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `surat_eksternal`
 --
 
+DROP TABLE IF EXISTS `surat_eksternal`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `surat_eksternal` (
-  `id_surat_eksternal` int(11) NOT NULL,
+  `id_surat_eksternal` int(11) NOT NULL AUTO_INCREMENT,
   `nomor_surat` varchar(255) NOT NULL,
   `isi_ringkas` text NOT NULL,
   `perihal` varchar(255) NOT NULL,
@@ -176,17 +233,32 @@ CREATE TABLE `surat_eksternal` (
   `id_jenis` int(11) DEFAULT NULL,
   `id_media` int(11) DEFAULT NULL,
   `id_prioritas` int(11) DEFAULT NULL,
-  `id_sifat` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
+  `id_sifat` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_surat_eksternal`),
+  KEY `fk_asal_surat_pengguna` (`asal_surat_pengguna`),
+  KEY `fk_tujuan_surat_pengguna` (`tujuan_surat_pengguna`),
+  KEY `fk_jenis` (`id_jenis`),
+  KEY `fk_prioritas` (`id_prioritas`),
+  KEY `fk_sifat` (`id_sifat`),
+  KEY `fk_media` (`id_media`),
+  CONSTRAINT `fk_asal_surat_pengguna` FOREIGN KEY (`asal_surat_pengguna`) REFERENCES `user` (`id_user`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `fk_jenis` FOREIGN KEY (`id_jenis`) REFERENCES `jenis_surat` (`id_jenis`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `fk_media` FOREIGN KEY (`id_media`) REFERENCES `media_surat` (`id_media`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `fk_prioritas` FOREIGN KEY (`id_prioritas`) REFERENCES `prioritas_surat` (`id_prioritas`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `fk_sifat` FOREIGN KEY (`id_sifat`) REFERENCES `sifat_surat` (`id_sifat`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `fk_tujuan_surat_pengguna` FOREIGN KEY (`tujuan_surat_pengguna`) REFERENCES `user` (`id_user`) ON DELETE SET NULL ON UPDATE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `surat_internal`
 --
 
+DROP TABLE IF EXISTS `surat_internal`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `surat_internal` (
-  `id_surat_internal` int(11) NOT NULL,
+  `id_surat_internal` int(11) NOT NULL AUTO_INCREMENT,
   `nomor_surat` varchar(255) NOT NULL,
   `destinasi_surat` int(11) DEFAULT NULL,
   `isi_ringkas` text NOT NULL,
@@ -199,299 +271,170 @@ CREATE TABLE `surat_internal` (
   `id_prioritas` int(11) DEFAULT NULL,
   `id_sifat` int(11) DEFAULT NULL,
   `id_media` int(11) DEFAULT NULL,
-  `asal_surat` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
+  `asal_surat` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_surat_internal`),
+  KEY `fk_masuk_jenis` (`id_jenis`),
+  KEY `fk_masuk_sifat` (`id_sifat`),
+  KEY `fk_masuk_prioritas` (`id_prioritas`),
+  KEY `fk_masuk_media` (`id_media`) USING BTREE,
+  KEY `fk_masuk_user` (`asal_surat`),
+  KEY `fk_destinasi_surat_user` (`destinasi_surat`),
+  CONSTRAINT `fk_destinasi_surat_user` FOREIGN KEY (`destinasi_surat`) REFERENCES `user` (`id_user`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `fk_masuk_jenis` FOREIGN KEY (`id_jenis`) REFERENCES `jenis_surat` (`id_jenis`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `fk_masuk_kategori` FOREIGN KEY (`id_media`) REFERENCES `media_surat` (`id_media`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `fk_masuk_prioritas` FOREIGN KEY (`id_prioritas`) REFERENCES `prioritas_surat` (`id_prioritas`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `fk_masuk_sifat` FOREIGN KEY (`id_sifat`) REFERENCES `sifat_surat` (`id_sifat`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `fk_masuk_user` FOREIGN KEY (`asal_surat`) REFERENCES `user` (`id_user`) ON DELETE SET NULL ON UPDATE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `unit_kerja`
 --
 
+DROP TABLE IF EXISTS `unit_kerja`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `unit_kerja` (
-  `id_unit` int(11) NOT NULL,
+  `id_unit` int(11) NOT NULL AUTO_INCREMENT,
   `nama_unit` varchar(255) NOT NULL,
   `kepala_unit` varchar(255) NOT NULL,
-  `keterangan` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `unit_kerja`
---
-
-INSERT INTO `unit_kerja` (`id_unit`, `nama_unit`, `kepala_unit`, `keterangan`) VALUES
-(3, 'Administrator', 'adminstrator', 'Admin sistem');
-
--- --------------------------------------------------------
+  `keterangan` text NOT NULL,
+  PRIMARY KEY (`id_unit`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `user`
 --
 
+DROP TABLE IF EXISTS `user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
-  `id_user` int(11) NOT NULL,
+  `id_user` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `level` enum('1','0') NOT NULL,
-  `id_pegawai` int(11) DEFAULT NULL
+  `id_pegawai` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_user`),
+  KEY `fk_user_pegawai` (`id_pegawai`),
+  CONSTRAINT `fk_user_pegawai` FOREIGN KEY (`id_pegawai`) REFERENCES `pegawai` (`id_pegawai`) ON DELETE SET NULL ON UPDATE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `view_eksternal_jenis`
+--
+
+DROP TABLE IF EXISTS `view_eksternal_jenis`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `view_eksternal_jenis` (
+  `jenis_surat` varchar(255) DEFAULT NULL,
+  `jumlah` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `user`
+-- Table structure for table `view_eksternal_media`
 --
 
-INSERT INTO `user` (`id_user`, `name`, `email`, `password`, `level`, `id_pegawai`) VALUES
-(1, 'admin', 'admin@admin.com', 'd033e22ae348aeb5660fc2140aec35850c4da997', '1', 1);
+DROP TABLE IF EXISTS `view_eksternal_media`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `view_eksternal_media` (
+  `media_surat` varchar(255) DEFAULT NULL,
+  `jumlah` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Indexes for dumped tables
+-- Table structure for table `view_eksternal_prioritas`
 --
 
---
--- Indexes for table `disposisi_eksternal`
---
-ALTER TABLE `disposisi_eksternal`
-  ADD PRIMARY KEY (`id_disposisi_eksternal`),
-  ADD KEY `fk_surat_eksternal` (`id_surat_eksternal`),
-  ADD KEY `fk_user` (`tujuan_disposisi`),
-  ADD KEY `fk_perintah_eksternal` (`id_perintah`);
+DROP TABLE IF EXISTS `view_eksternal_prioritas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `view_eksternal_prioritas` (
+  `prioritas_surat` varchar(255) DEFAULT NULL,
+  `jumlah` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Indexes for table `disposisi_internal`
---
-ALTER TABLE `disposisi_internal`
-  ADD PRIMARY KEY (`id_disposisi_internal`),
-  ADD KEY `fk_disposisi` (`id_surat_internal`),
-  ADD KEY `fk_perintah` (`id_perintah`),
-  ADD KEY `fk_tujuan` (`tujuan_disposisi`);
-
---
--- Indexes for table `jabatan`
---
-ALTER TABLE `jabatan`
-  ADD PRIMARY KEY (`id_jabatan`),
-  ADD KEY `fk_jabatan_unit` (`id_unit`);
-
---
--- Indexes for table `jenis_surat`
---
-ALTER TABLE `jenis_surat`
-  ADD PRIMARY KEY (`id_jenis`);
-
---
--- Indexes for table `media_surat`
---
-ALTER TABLE `media_surat`
-  ADD PRIMARY KEY (`id_media`);
-
---
--- Indexes for table `pegawai`
---
-ALTER TABLE `pegawai`
-  ADD PRIMARY KEY (`id_pegawai`),
-  ADD KEY `fk_pegawai_unit` (`id_unit`),
-  ADD KEY `fk_pegawai_jabatan` (`id_jabatan`);
-
---
--- Indexes for table `perintah_disposisi`
---
-ALTER TABLE `perintah_disposisi`
-  ADD PRIMARY KEY (`id_perintah`);
-
---
--- Indexes for table `prioritas_surat`
---
-ALTER TABLE `prioritas_surat`
-  ADD PRIMARY KEY (`id_prioritas`);
-
---
--- Indexes for table `sifat_surat`
---
-ALTER TABLE `sifat_surat`
-  ADD PRIMARY KEY (`id_sifat`);
-
---
--- Indexes for table `surat_eksternal`
---
-ALTER TABLE `surat_eksternal`
-  ADD PRIMARY KEY (`id_surat_eksternal`),
-  ADD KEY `fk_asal_surat_pengguna` (`asal_surat_pengguna`),
-  ADD KEY `fk_tujuan_surat_pengguna` (`tujuan_surat_pengguna`),
-  ADD KEY `fk_jenis` (`id_jenis`),
-  ADD KEY `fk_prioritas` (`id_prioritas`),
-  ADD KEY `fk_sifat` (`id_sifat`),
-  ADD KEY `fk_media` (`id_media`);
-
---
--- Indexes for table `surat_internal`
---
-ALTER TABLE `surat_internal`
-  ADD PRIMARY KEY (`id_surat_internal`),
-  ADD KEY `fk_masuk_jenis` (`id_jenis`),
-  ADD KEY `fk_masuk_sifat` (`id_sifat`),
-  ADD KEY `fk_masuk_prioritas` (`id_prioritas`),
-  ADD KEY `fk_masuk_media` (`id_media`) USING BTREE,
-  ADD KEY `fk_masuk_user` (`asal_surat`),
-  ADD KEY `fk_destinasi_surat_user` (`destinasi_surat`);
-
---
--- Indexes for table `unit_kerja`
---
-ALTER TABLE `unit_kerja`
-  ADD PRIMARY KEY (`id_unit`);
-
---
--- Indexes for table `user`
---
-ALTER TABLE `user`
-  ADD PRIMARY KEY (`id_user`),
-  ADD KEY `fk_user_pegawai` (`id_pegawai`);
-
---
--- AUTO_INCREMENT for dumped tables
+-- Table structure for table `view_eksternal_sifat`
 --
 
---
--- AUTO_INCREMENT for table `disposisi_eksternal`
---
-ALTER TABLE `disposisi_eksternal`
-  MODIFY `id_disposisi_eksternal` int(11) NOT NULL AUTO_INCREMENT;
+DROP TABLE IF EXISTS `view_eksternal_sifat`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `view_eksternal_sifat` (
+  `sifat_surat` varchar(255) DEFAULT NULL,
+  `jumlah` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- AUTO_INCREMENT for table `disposisi_internal`
---
-ALTER TABLE `disposisi_internal`
-  MODIFY `id_disposisi_internal` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `jabatan`
---
-ALTER TABLE `jabatan`
-  MODIFY `id_jabatan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `jenis_surat`
---
-ALTER TABLE `jenis_surat`
-  MODIFY `id_jenis` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `media_surat`
---
-ALTER TABLE `media_surat`
-  MODIFY `id_media` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `pegawai`
---
-ALTER TABLE `pegawai`
-  MODIFY `id_pegawai` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `perintah_disposisi`
---
-ALTER TABLE `perintah_disposisi`
-  MODIFY `id_perintah` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT for table `prioritas_surat`
---
-ALTER TABLE `prioritas_surat`
-  MODIFY `id_prioritas` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT for table `sifat_surat`
---
-ALTER TABLE `sifat_surat`
-  MODIFY `id_sifat` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `surat_eksternal`
---
-ALTER TABLE `surat_eksternal`
-  MODIFY `id_surat_eksternal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
-
---
--- AUTO_INCREMENT for table `surat_internal`
---
-ALTER TABLE `surat_internal`
-  MODIFY `id_surat_internal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `unit_kerja`
---
-ALTER TABLE `unit_kerja`
-  MODIFY `id_unit` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `user`
---
-ALTER TABLE `user`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- Constraints for dumped tables
+-- Table structure for table `view_internal_jenis`
 --
 
---
--- Constraints for table `disposisi_eksternal`
---
-ALTER TABLE `disposisi_eksternal`
-  ADD CONSTRAINT `fk_perintah_eksternal` FOREIGN KEY (`id_perintah`) REFERENCES `perintah_disposisi` (`id_perintah`) ON DELETE SET NULL ON UPDATE SET NULL,
-  ADD CONSTRAINT `fk_surat_eksternal` FOREIGN KEY (`id_surat_eksternal`) REFERENCES `surat_eksternal` (`id_surat_eksternal`) ON DELETE SET NULL ON UPDATE SET NULL,
-  ADD CONSTRAINT `fk_user` FOREIGN KEY (`tujuan_disposisi`) REFERENCES `user` (`id_user`) ON DELETE SET NULL ON UPDATE SET NULL;
+DROP TABLE IF EXISTS `view_internal_jenis`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `view_internal_jenis` (
+  `jenis_surat` varchar(255) DEFAULT NULL,
+  `jumlah` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Constraints for table `disposisi_internal`
+-- Table structure for table `view_internal_media`
 --
-ALTER TABLE `disposisi_internal`
-  ADD CONSTRAINT `fk_disposisi` FOREIGN KEY (`id_surat_internal`) REFERENCES `surat_internal` (`id_surat_internal`) ON DELETE SET NULL ON UPDATE SET NULL,
-  ADD CONSTRAINT `fk_perintah` FOREIGN KEY (`id_perintah`) REFERENCES `perintah_disposisi` (`id_perintah`) ON DELETE SET NULL ON UPDATE SET NULL,
-  ADD CONSTRAINT `fk_tujuan` FOREIGN KEY (`tujuan_disposisi`) REFERENCES `pegawai` (`id_pegawai`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+DROP TABLE IF EXISTS `view_internal_media`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `view_internal_media` (
+  `media_surat` varchar(255) DEFAULT NULL,
+  `jumlah` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Constraints for table `jabatan`
+-- Table structure for table `view_internal_prioritas`
 --
-ALTER TABLE `jabatan`
-  ADD CONSTRAINT `fk_jabatan_unit` FOREIGN KEY (`id_unit`) REFERENCES `unit_kerja` (`id_unit`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+DROP TABLE IF EXISTS `view_internal_prioritas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `view_internal_prioritas` (
+  `prioritas_surat` varchar(255) DEFAULT NULL,
+  `jumlah` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Constraints for table `pegawai`
+-- Table structure for table `view_internal_sifat`
 --
-ALTER TABLE `pegawai`
-  ADD CONSTRAINT `fk_pegawai_jabatan` FOREIGN KEY (`id_jabatan`) REFERENCES `jabatan` (`id_jabatan`) ON DELETE SET NULL ON UPDATE SET NULL,
-  ADD CONSTRAINT `fk_pegawai_unit` FOREIGN KEY (`id_unit`) REFERENCES `unit_kerja` (`id_unit`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---
--- Constraints for table `surat_eksternal`
---
-ALTER TABLE `surat_eksternal`
-  ADD CONSTRAINT `fk_asal_surat_pengguna` FOREIGN KEY (`asal_surat_pengguna`) REFERENCES `user` (`id_user`) ON DELETE SET NULL ON UPDATE SET NULL,
-  ADD CONSTRAINT `fk_jenis` FOREIGN KEY (`id_jenis`) REFERENCES `jenis_surat` (`id_jenis`) ON DELETE SET NULL ON UPDATE SET NULL,
-  ADD CONSTRAINT `fk_media` FOREIGN KEY (`id_media`) REFERENCES `media_surat` (`id_media`) ON DELETE SET NULL ON UPDATE SET NULL,
-  ADD CONSTRAINT `fk_prioritas` FOREIGN KEY (`id_prioritas`) REFERENCES `prioritas_surat` (`id_prioritas`) ON DELETE SET NULL ON UPDATE SET NULL,
-  ADD CONSTRAINT `fk_sifat` FOREIGN KEY (`id_sifat`) REFERENCES `sifat_surat` (`id_sifat`) ON DELETE SET NULL ON UPDATE SET NULL,
-  ADD CONSTRAINT `fk_tujuan_surat_pengguna` FOREIGN KEY (`tujuan_surat_pengguna`) REFERENCES `user` (`id_user`) ON DELETE SET NULL ON UPDATE SET NULL;
+DROP TABLE IF EXISTS `view_internal_sifat`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `view_internal_sifat` (
+  `sifat_surat` varchar(255) DEFAULT NULL,
+  `jumlah` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
---
--- Constraints for table `surat_internal`
---
-ALTER TABLE `surat_internal`
-  ADD CONSTRAINT `fk_destinasi_surat_user` FOREIGN KEY (`destinasi_surat`) REFERENCES `user` (`id_user`) ON DELETE SET NULL ON UPDATE SET NULL,
-  ADD CONSTRAINT `fk_masuk_jenis` FOREIGN KEY (`id_jenis`) REFERENCES `jenis_surat` (`id_jenis`) ON DELETE SET NULL ON UPDATE SET NULL,
-  ADD CONSTRAINT `fk_masuk_kategori` FOREIGN KEY (`id_media`) REFERENCES `media_surat` (`id_media`) ON DELETE SET NULL ON UPDATE SET NULL,
-  ADD CONSTRAINT `fk_masuk_prioritas` FOREIGN KEY (`id_prioritas`) REFERENCES `prioritas_surat` (`id_prioritas`) ON DELETE SET NULL ON UPDATE SET NULL,
-  ADD CONSTRAINT `fk_masuk_sifat` FOREIGN KEY (`id_sifat`) REFERENCES `sifat_surat` (`id_sifat`) ON DELETE SET NULL ON UPDATE SET NULL,
-  ADD CONSTRAINT `fk_masuk_user` FOREIGN KEY (`asal_surat`) REFERENCES `user` (`id_user`) ON DELETE SET NULL ON UPDATE SET NULL;
-
---
--- Constraints for table `user`
---
-ALTER TABLE `user`
-  ADD CONSTRAINT `fk_user_pegawai` FOREIGN KEY (`id_pegawai`) REFERENCES `pegawai` (`id_pegawai`) ON DELETE SET NULL ON UPDATE SET NULL;
-COMMIT;
-
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2020-12-29 15:43:25

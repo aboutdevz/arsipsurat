@@ -23,6 +23,14 @@ class Admin extends CI_Controller {
         $destinasi_eks = array('tujuan_surat_pengguna' => $this->session->userdata('id_user'));
         
         $data = array(
+            'view_internal_jenis' => $this->crud->all('view_internal_jenis')->result(),
+            'view_internal_prioritas' => $this->crud->all('view_internal_prioritas')->result(),
+            'view_internal_sifat' => $this->crud->all('view_internal_sifat')->result(),
+            'view_internal_media' => $this->crud->all('view_internal_media')->result(),
+            'view_eksternal_jenis' => $this->crud->all('view_eksternal_jenis')->result(),
+            'view_eksternal_prioritas' => $this->crud->all('view_eksternal_prioritas')->result(),
+            'view_eksternal_sifat' => $this->crud->all('view_eksternal_sifat')->result(),
+            'view_eksternal_media' => $this->crud->all('view_eksternal_media')->result(),
             'set_internal_masuk' => $this->crud->get('surat_internal',$destinasi_surat)->num_rows(),
             'set_internal_keluar' => $this->crud->get('surat_internal',$asal_surat)->num_rows(),
             'set_eksternal_keluar' => $this->crud->get('surat_eksternal',$asal_eks)->num_rows(),
