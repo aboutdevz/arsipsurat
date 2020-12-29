@@ -27,8 +27,9 @@ CREATE TABLE `arsip_dokumen` (
   `nama_dokumen` varchar(255) DEFAULT NULL,
   `file_path` varchar(255) DEFAULT NULL,
   `tanggal_dokumen` varchar(255) DEFAULT NULL,
+  `keterangan` varchar(255) NOT NULL,
   PRIMARY KEY (`id_dokumen`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,8 +44,9 @@ CREATE TABLE `arsip_formulir` (
   `nama_formulir` varchar(255) DEFAULT NULL,
   `file_path` varchar(255) DEFAULT NULL,
   `tanggal_formulir` varchar(255) DEFAULT NULL,
+  `keterangan` varchar(255) NOT NULL,
   PRIMARY KEY (`id_formulir`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -162,7 +164,7 @@ CREATE TABLE `pegawai` (
   KEY `fk_pegawai_jabatan` (`id_jabatan`),
   CONSTRAINT `fk_pegawai_jabatan` FOREIGN KEY (`id_jabatan`) REFERENCES `jabatan` (`id_jabatan`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `fk_pegawai_unit` FOREIGN KEY (`id_unit`) REFERENCES `unit_kerja` (`id_unit`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -437,4 +439,4 @@ CREATE TABLE `view_internal_sifat` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-12-29 15:43:25
+-- Dump completed on 2020-12-29 16:15:38
